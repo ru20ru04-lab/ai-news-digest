@@ -361,7 +361,7 @@ def call_claude(items: list[dict]) -> dict:
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=8000,
+        max_tokens=16000,
         messages=[{"role": "user", "content": prompt}],
     )
 
