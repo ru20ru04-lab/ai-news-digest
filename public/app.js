@@ -19,14 +19,15 @@
   const sanitizeUrl = (u) => /^https?:\/\//i.test(String(u || '').trim()) ? u : '#';
   const normalizeCategory = (c) => VALID_CATEGORIES.includes(c) ? c : 'その他';
 
-  // **bold** / ==underline== / !!warning!! / \n をHTML化（XSS対策のため必ずescape後に処理）
+  // **bold** / !!warning!! / \n をHTML化（XSS対策のため必ずescape後に処理）
+  // 後方互換：旧 ==text== は太字に変換
   function richText(s) {
     if (!s) return '';
     let h = escapeHtml(s);
     // !!warning!! を最優先（赤太字）
     h = h.replace(/!!([^!]+)!!/g, '<span class="warn">$1</span>');
-    // ==underline== （下線強調）
-    h = h.replace(/==([^=]+)==/g, '<span class="hl">$1</span>');
+    // 後方互換：旧マークアップ ==text== を太字として表示
+    h = h.replace(/==([^=]+)==/g, '<strong class="kw">$1</strong>');
     // **bold** （太字）
     h = h.replace(/\*\*([^*]+)\*\*/g, '<strong class="kw">$1</strong>');
     h = h.replace(/\r?\n/g, '<br/>');

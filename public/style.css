@@ -293,15 +293,6 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 .topic-title-ja .kw {
   color: var(--accent);
 }
-/* ==下線強調==（.hl）：teal の太い下線。背景なし */
-.hl {
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-color: var(--hl-color);
-  text-decoration-thickness: 3px;
-  text-underline-offset: 3px;
-  text-decoration-skip-ink: none;
-}
 /* !!注意・リスク!!（.warn）：赤太字 */
 .warn {
   color: var(--warn-color);
