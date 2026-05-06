@@ -26,8 +26,10 @@
   --tip-accent: #ffd166;
   --bookmark-active: #ffd166;
   /* マークアップ装飾（ダーク） */
-  --hl-color: #2dd4bf;          /* 下線強調 teal */
   --warn-color: #f87171;        /* 注意・リスク 赤 */
+  /* コントラスト差スタイル：本文を少し薄く、太字をくっきり */
+  --text-body: #a8b1c4;         /* 本文の薄めグレー */
+  --text-strong: #ffffff;       /* 太字の純白 */
   --c-newmodel: #4ade80;
   --c-research: #a78bfa;
   --c-business: #fb923c;
@@ -64,8 +66,10 @@
   --tip-accent: #b8841a;
   --bookmark-active: #f59e0b;
   /* マークアップ装飾（ライト） */
-  --hl-color: #0d9488;          /* 下線強調 teal */
   --warn-color: #dc2626;        /* 注意・リスク 赤 */
+  /* コントラスト差スタイル：本文を少し薄く、太字をくっきり */
+  --text-body: #4a5468;         /* 本文の薄めグレー（プレビューより気持ち濃く） */
+  --text-strong: #000000;       /* 太字の純黒 */
   --c-newmodel: #16a34a;
   --c-research: #7c3aed;
   --c-business: #ea580c;
@@ -284,20 +288,33 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 }
 
 /* ===== マークアップ装飾（共通） ===== */
-/* **太字**（.kw）：単に太字。色は本文と同じ */
+/* **太字**（.kw）：純白/純黒で本文の薄グレーとコントラスト差をつける */
 .kw {
   font-weight: 800;
+  color: var(--text-strong);
   letter-spacing: 0.01em;
 }
-/* タイトル内のキーワードはアクセント色で軽く強調 */
-.topic-title-ja .kw {
-  color: var(--accent);
-}
-/* !!注意・リスク!!（.warn）：赤太字 */
+/* !!注意・リスク!!（.warn）：赤太字（コントラストでも色を維持） */
 .warn {
   color: var(--warn-color);
   font-weight: 800;
 }
+
+/* ===== 本文セクションは薄めグレーで（太字とのコントラストを作る） ===== */
+.topic-title-ja,
+.simple-text,
+.points-list li,
+.ba-text,
+.impact-text,
+.detail-summary,
+.dp-val,
+.detail-text,
+.overview-text,
+.tip-content {
+  color: var(--text-body);
+}
+/* BEFORE 側はさらに薄い trayed-out 表現を維持 */
+.ba-col-before .ba-text { color: var(--text-mute); }
 
 .simple-block {
   padding: 14px 16px 14px 18px;

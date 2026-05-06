@@ -4,10 +4,14 @@ on:
   schedule:
     # 毎朝 6:00 JST = 21:00 UTC（前日）
     - cron: '0 21 * * *'
-  workflow_dispatch:  # 手動実行も可能
+  workflow_dispatch:  # 手動：ニュース再生成 + デプロイ
+  push:               # public/** の変更で：デプロイのみ（APIコールなし）
+    branches: [main]
+    paths:
+      - 'public/**'
 
 permissions:
-  contents: write  # digest.json をコミットするのに必要
+  contents: write
 
 concurrency:
   group: daily-digest
@@ -15,6 +19,8 @@ concurrency:
 
 jobs:
   build:
+    # スケジュール or 手動のときのみ実行（push では skip）
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -51,6 +57,8 @@ jobs:
 
   deploy:
     needs: build
+    # build が成功 OR スキップ（push の場合）どちらでも deploy する
+    if: ${{ always() && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -61,6 +69,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main  # build が push したコミットを確実に取得
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
