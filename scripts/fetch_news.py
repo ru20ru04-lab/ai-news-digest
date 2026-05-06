@@ -359,10 +359,44 @@ def main() -> int:
     digest["source_count"] = len(items)
     digest.setdefault("topics", digest.pop("items", []))  # 旧 "items" キーがあった場合の互換
 
-    out_path = Path(__file__).resolve().parent.parent / "public" / "data" / "digest.json"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    data_dir = Path(__file__).resolve().parent.parent / "public" / "data"
+    archive_dir = data_dir / "archive"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. 最新版（digest.json）
+    out_path = data_dir / "digest.json"
     out_path.write_text(json.dumps(digest, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[INFO] Wrote {len(digest.get('topics', []))} topics to {out_path}", file=sys.stderr)
+
+    # 2. 履歴版（archive/YYYY-MM-DD.json）。同日上書き
+    date_key = now_jst.strftime("%Y-%m-%d")
+    archive_path = archive_dir / f"{date_key}.json"
+    archive_path.write_text(json.dumps(digest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 3. インデックス（archive/index.json）。古い順から最新順へ並べ、最新180日分を保持
+    index_path = archive_dir / "index.json"
+    try:
+        index = json.loads(index_path.read_text(encoding="utf-8")) if index_path.exists() else {"entries": []}
+    except Exception:
+        index = {"entries": []}
+
+    entries = [e for e in index.get("entries", []) if e.get("date") != date_key]
+    entries.append({
+        "date": date_key,
+        "date_label": digest.get("date", date_key),
+        "overview": (digest.get("overview") or "")[:120],
+        "topics_count": len(digest.get("topics", [])),
+    })
+    entries.sort(key=lambda e: e["date"], reverse=True)
+    entries = entries[:180]
+    index["entries"] = entries
+    index["updated_at"] = now_jst.strftime("%Y-%m-%d %H:%M JST")
+    index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    print(f"[INFO] Wrote {len(digest.get('topics', []))} topics", file=sys.stderr)
+    print(f"[INFO]   -> {out_path}", file=sys.stderr)
+    print(f"[INFO]   -> {archive_path}", file=sys.stderr)
+    print(f"[INFO]   -> {index_path} ({len(entries)} entries total)", file=sys.stderr)
     return 0
 
 

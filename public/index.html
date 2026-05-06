@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0e1a" />
+  <meta name="theme-color" content="#0a0e1a" id="theme-color-meta" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AIニュース" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <link rel="icon" href="icons/icon-192.png" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
   <title>今日のAIニュース</title>
 </head>
-<body>
+<body data-theme="dark" data-font="md">
   <header class="app-header">
     <div class="header-inner">
-      <h1 class="app-title">今日のAIニュース</h1>
+      <h1 class="app-title" id="app-title">今日のAIニュース</h1>
     </div>
     <button class="reload-btn" id="reload-btn" aria-label="更新">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
@@ -30,7 +30,8 @@
       <button onclick="location.reload()" class="retry-btn">再読み込み</button>
     </div>
 
-    <article id="content" hidden>
+    <!-- ===== HOME ===== -->
+    <section class="view view-home" id="view-home" hidden>
       <!-- TODAY'S OVERVIEW -->
       <section class="overview">
         <div class="section-label">TODAY'S OVERVIEW</div>
@@ -38,14 +39,23 @@
         <p class="overview-text" id="overview-text"></p>
       </section>
 
+      <!-- カテゴリフィルタ（オプションで設定すると表示） -->
+      <div class="active-filter" id="active-filter" hidden>
+        <span id="active-filter-label"></span>
+        <button class="filter-clear" id="filter-clear" aria-label="フィルタ解除">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
       <!-- TOPICS -->
       <section class="topics">
         <div class="section-label">TOPICS</div>
         <ul id="topics-list" class="topics-list"></ul>
+        <p class="empty-msg" id="topics-empty" hidden>該当するトピックがありません。</p>
       </section>
 
       <!-- TODAY'S TIP -->
-      <section class="tip">
+      <section class="tip" id="tip-section">
         <div class="section-label">TODAY'S TIP</div>
         <div class="tip-card">
           <div class="tip-icon">
@@ -57,14 +67,120 @@
           </div>
         </div>
       </section>
-    </article>
+    </section>
+
+    <!-- ===== ARCHIVE ===== -->
+    <section class="view view-archive" id="view-archive" hidden>
+      <div class="section-label">ARCHIVE</div>
+      <p class="archive-intro">過去のダイジェストを日付から開けます。</p>
+      <ul class="archive-list" id="archive-list"></ul>
+      <p class="empty-msg" id="archive-empty" hidden>まだアーカイブはありません。</p>
+
+      <!-- 個別日付詳細表示 -->
+      <div class="archive-detail" id="archive-detail" hidden>
+        <button class="back-btn" id="archive-back">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          一覧に戻る
+        </button>
+        <div id="archive-detail-content"></div>
+      </div>
+    </section>
+
+    <!-- ===== BOOKMARKS ===== -->
+    <section class="view view-bookmarks" id="view-bookmarks" hidden>
+      <div class="section-label">BOOKMARKS</div>
+      <p class="bookmarks-intro">気になったトピックを保存できます。</p>
+      <ul class="topics-list" id="bookmarks-list"></ul>
+      <p class="empty-msg" id="bookmarks-empty" hidden>
+        まだお気に入りはありません。<br/>
+        トピックカードの☆マークをタップして保存できます。
+      </p>
+    </section>
+
+    <!-- ===== OPTIONS ===== -->
+    <section class="view view-options" id="view-options" hidden>
+      <div class="section-label">OPTIONS</div>
+
+      <div class="opt-group">
+        <h3 class="opt-title">カテゴリで絞り込み</h3>
+        <p class="opt-desc">ホームに表示するトピックを絞り込みます。</p>
+        <div class="opt-chips" id="opt-categories">
+          <button class="chip" data-category="all">すべて</button>
+          <button class="chip" data-category="新モデル">新モデル</button>
+          <button class="chip" data-category="研究">研究</button>
+          <button class="chip" data-category="ビジネス">ビジネス</button>
+          <button class="chip" data-category="規制">規制</button>
+          <button class="chip" data-category="ツール">ツール</button>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <h3 class="opt-title">テーマ</h3>
+        <p class="opt-desc">画面の明るさを切り替えます。</p>
+        <div class="opt-chips" id="opt-theme">
+          <button class="chip" data-theme="dark">🌙 ダーク</button>
+          <button class="chip" data-theme="light">☀️ ライト</button>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <h3 class="opt-title">文字サイズ</h3>
+        <p class="opt-desc">読みやすい大きさに調整できます。</p>
+        <div class="opt-chips" id="opt-font">
+          <button class="chip" data-font="sm">小</button>
+          <button class="chip" data-font="md">中</button>
+          <button class="chip" data-font="lg">大</button>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <h3 class="opt-title">最初から開く</h3>
+        <p class="opt-desc">トピックの1件目を最初から開いておくか。</p>
+        <div class="opt-chips" id="opt-firstopen">
+          <button class="chip" data-firstopen="on">ON</button>
+          <button class="chip" data-firstopen="off">OFF</button>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <h3 class="opt-title">アプリについて</h3>
+        <ul class="info-list">
+          <li><span class="info-key">最終更新</span><span class="info-val" id="info-updated">—</span></li>
+          <li><span class="info-key">本日のソース数</span><span class="info-val" id="info-sources">—</span></li>
+          <li><span class="info-key">配信時刻</span><span class="info-val">毎朝 6:00 JST</span></li>
+          <li><span class="info-key">バージョン</span><span class="info-val">v1.1</span></li>
+        </ul>
+        <p class="opt-desc" style="margin-top: 14px;">
+          ニュースは Anthropic / OpenAI / Google AI / Hugging Face / The Decoder / MIT Tech Review / ITmedia AI+ / Gigazine / ASCII / AINOW / Hacker News / arXiv / Google News（日本のAI報道）から自動収集し、Claude Haiku 4.5 が日本語で要約しています。
+        </p>
+        <a class="opt-link" href="https://github.com/ru20ru04-lab/ai-news-digest" target="_blank" rel="noopener noreferrer">
+          GitHub でソースコードを見る
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </section>
   </main>
 
-  <footer class="app-footer">
-    <p id="footer-meta"></p>
-    <p class="footer-sub">毎朝 6 時 JST に自動更新</p>
-  </footer>
+  <!-- ===== TAB BAR ===== -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab" data-tab="home" aria-label="ホーム">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>ホーム</span>
+    </button>
+    <button class="tab" data-tab="archive" aria-label="アーカイブ">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+      <span>アーカイブ</span>
+    </button>
+    <button class="tab" data-tab="bookmarks" aria-label="お気に入り">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>お気に入り</span>
+    </button>
+    <button class="tab" data-tab="options" aria-label="オプション">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>オプション</span>
+    </button>
+  </nav>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

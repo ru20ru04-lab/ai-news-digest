@@ -1,10 +1,10 @@
 // Service Worker：シェル（HTML/CSS/JS）はキャッシュ、データ（digest.json）は常にネット優先
-const CACHE = 'ai-news-shell-v2';
+const CACHE = 'ai-news-shell-v3';
 const SHELL = [
   './',
   './index.html',
-  './style.css?v=2',
-  './app.js?v=2',
+  './style.css?v=3',
+  './app.js?v=3',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -25,8 +25,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // データはネット優先（オフライン時のみキャッシュ）
-  if (url.pathname.endsWith('digest.json')) {
+  // データ系はすべてネット優先（オフライン時のみキャッシュ）
+  if (url.pathname.includes('/data/')) {
     event.respondWith(
       fetch(event.request).then((res) => {
         const clone = res.clone();
