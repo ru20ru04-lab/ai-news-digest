@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0e1a" />
+  <title>コントラスト差プレビュー</title>
+  <link rel="stylesheet" href="style.css?v=7" />
+  <style>
+    /* ===== プレビュー専用スタイル ===== */
+    body { padding-bottom: calc(var(--safe-bottom) + 24px); }
+    .preview-header {
+      max-width: 720px;
+      margin: 24px auto 8px;
+      padding: 0 16px;
+    }
+    .preview-header h1 {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .preview-header p {
+      font-size: 0.84em;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .preview-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.84em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 8px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+    .demo-section {
+      max-width: 720px;
+      margin: 28px auto 0;
+      padding: 0 16px;
+    }
+    .demo-label {
+      display: inline-block;
+      font-size: 0.69em;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .demo-current .demo-label { background: var(--text-mute); color: #fff; }
+    .demo-proposed .demo-label { background: var(--accent); color: #fff; }
+
+    /* ===== 提案スタイル（コントラスト差版） ===== */
+    /* 周りの文字を少し薄く、太字部分はくっきり */
+    .style-proposed .topic-title-ja,
+    .style-proposed .simple-text,
+    .style-proposed .points-list li,
+    .style-proposed .ba-text,
+    .style-proposed .impact-text,
+    .style-proposed .detail-summary,
+    .style-proposed .dp-val,
+    .style-proposed .detail-text {
+      color: var(--proposed-faded);
+    }
+    .style-proposed .kw {
+      color: var(--proposed-bold);
+      font-weight: 800;
+    }
+    /* タイトル内の太字は色変更ナシ（タイトルは元から強調） */
+    .style-proposed .topic-title-ja .kw {
+      color: var(--proposed-bold);
+    }
+    [data-theme="dark"] {
+      --proposed-faded: #a8b1c4;     /* 薄めグレー */
+      --proposed-bold: #ffffff;       /* 純白でくっきり */
+    }
+    [data-theme="light"] {
+      --proposed-faded: #6b7488;
+      --proposed-bold: #000000;
+    }
+
+    /* テーマ切替ボタン */
+    .theme-toggle {
+      display: inline-flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+    .theme-toggle button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.78em;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .theme-toggle button.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body data-theme="dark" data-font="md">
+
+  <header class="preview-header">
+    <div class="header-row">
+      <h1 style="margin:0;">📋 コントラスト差スタイル比較</h1>
+      <div class="theme-toggle">
+        <button onclick="setTheme('dark')" id="t-dark" class="active">🌙 ダーク</button>
+        <button onclick="setTheme('light')" id="t-light">☀️ ライト</button>
+      </div>
+    </div>
+    <p>同じトピックを2つのスタイルで表示しています。<br/>
+    「現在」と「提案」を見比べて、どちらが見やすいか判断してください。</p>
+    <a href="./" class="preview-back">
+      ← 本番アプリに戻る
+    </a>
+  </header>
+
+  <!-- 現在のスタイル -->
+  <section class="demo-section demo-current">
+    <span class="demo-label" style="background: var(--text-mute); color: #fff;">CURRENT 現状</span>
+    <ul class="topics-list">
+      <li>
+        <details class="topic-card" open>
+          <summary>
+            <div class="topic-summary-top">
+              <div class="topic-summary-top-left">
+                <span class="category-tag cat-新モデル">新モデル</span>
+              </div>
+            </div>
+            <div class="topic-title-ja"><strong class="kw">OpenAI</strong>、新デフォルトモデル「<strong class="kw">GPT-5.5 Instant</strong>」、ハルシネーション <strong class="kw">52.5%削減</strong></div>
+            <div class="topic-summary-bottom">
+              <span class="topic-source">The Decoder</span>
+            </div>
+          </summary>
+          <div class="topic-body">
+
+            <div class="simple-block">
+              <div class="simple-label">かんたん説明</div>
+              <p class="simple-text"><strong class="kw">ChatGPT</strong> の頭脳が新しくなりました。新しい頭脳は嘘（ハルシネーション）を <strong class="kw">52.5%</strong> 減らし、あなたの過去の質問を覚えてより<strong class="kw">個人的な答え</strong>を出すようになります。</p>
+            </div>
+
+            <div class="points-block">
+              <div class="block-label">ポイント</div>
+              <ol class="points-list">
+                <li><span class="pt-text"><strong class="kw">ハルシネーション</strong>（嘘の情報）が <strong class="kw">52.5%</strong> 削減</span></li>
+                <li><span class="pt-text">過去のチャット履歴やファイルを学習し、<strong class="kw">より個人的な回答</strong>を生成</span></li>
+                <li><span class="pt-text"><strong class="kw">Memory Sources</strong> 機能で、回答がどのデータに基づいているかが透明化</span></li>
+              </ol>
+            </div>
+
+            <div class="ba-block">
+              <div class="block-label">BEFORE → AFTER</div>
+              <div class="ba-stack">
+                <div class="ba-col ba-col-before">
+                  <div class="ba-head">BEFORE　これまで</div>
+                  <div class="ba-text">複数の情報源の学習履歴が不明確なまま、<strong class="kw">ハルシネーション</strong>のリスクが高かった状態</div>
+                </div>
+                <div class="ba-arrow-row">
+                  <span class="ba-arrow-line"></span>
+                  <span class="ba-arrow-label">こう変わる</span>
+                  <span class="ba-arrow-line"></span>
+                </div>
+                <div class="ba-col ba-col-after">
+                  <div class="ba-head">AFTER　これから</div>
+                  <div class="ba-text">学習データの出処が明確になり、<strong class="kw">医療・法律</strong>等での信頼性が大幅向上</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="impact-block">
+              <div class="block-label">💡 あなたへの影響</div>
+              <p class="impact-text"><strong class="kw">ChatGPT</strong> ユーザーは <strong class="kw">医療相談や法的判断</strong>など重要な場面でより信頼できる回答が得られるようになります。</p>
+            </div>
+          </div>
+        </details>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 提案のスタイル -->
+  <section class="demo-section demo-proposed">
+    <span class="demo-label" style="background: var(--accent); color: #fff;">PROPOSED 提案：コントラスト差</span>
+    <div class="style-proposed">
+      <ul class="topics-list">
+        <li>
+          <details class="topic-card" open>
+            <summary>
+              <div class="topic-summary-top">
+                <div class="topic-summary-top-left">
+                  <span class="category-tag cat-新モデル">新モデル</span>
+                </div>
+              </div>
+              <div class="topic-title-ja"><strong class="kw">OpenAI</strong>、新デフォルトモデル「<strong class="kw">GPT-5.5 Instant</strong>」、ハルシネーション <strong class="kw">52.5%削減</strong></div>
+              <div class="topic-summary-bottom">
+                <span class="topic-source">The Decoder</span>
+              </div>
+            </summary>
+            <div class="topic-body">
+
+              <div class="simple-block">
+                <div class="simple-label">かんたん説明</div>
+                <p class="simple-text"><strong class="kw">ChatGPT</strong> の頭脳が新しくなりました。新しい頭脳は嘘（ハルシネーション）を <strong class="kw">52.5%</strong> 減らし、あなたの過去の質問を覚えてより<strong class="kw">個人的な答え</strong>を出すようになります。</p>
+              </div>
+
+              <div class="points-block">
+                <div class="block-label">ポイント</div>
+                <ol class="points-list">
+                  <li><span class="pt-text"><strong class="kw">ハルシネーション</strong>（嘘の情報）が <strong class="kw">52.5%</strong> 削減</span></li>
+                  <li><span class="pt-text">過去のチャット履歴やファイルを学習し、<strong class="kw">より個人的な回答</strong>を生成</span></li>
+                  <li><span class="pt-text"><strong class="kw">Memory Sources</strong> 機能で、回答がどのデータに基づいているかが透明化</span></li>
+                </ol>
+              </div>
+
+              <div class="ba-block">
+                <div class="block-label">BEFORE → AFTER</div>
+                <div class="ba-stack">
+                  <div class="ba-col ba-col-before">
+                    <div class="ba-head">BEFORE　これまで</div>
+                    <div class="ba-text">複数の情報源の学習履歴が不明確なまま、<strong class="kw">ハルシネーション</strong>のリスクが高かった状態</div>
+                  </div>
+                  <div class="ba-arrow-row">
+                    <span class="ba-arrow-line"></span>
+                    <span class="ba-arrow-label">こう変わる</span>
+                    <span class="ba-arrow-line"></span>
+                  </div>
+                  <div class="ba-col ba-col-after">
+                    <div class="ba-head">AFTER　これから</div>
+                    <div class="ba-text">学習データの出処が明確になり、<strong class="kw">医療・法律</strong>等での信頼性が大幅向上</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="impact-block">
+                <div class="block-label">💡 あなたへの影響</div>
+                <p class="impact-text"><strong class="kw">ChatGPT</strong> ユーザーは <strong class="kw">医療相談や法的判断</strong>など重要な場面でより信頼できる回答が得られるようになります。</p>
+              </div>
+            </div>
+          </details>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="preview-header" style="margin-top: 32px;">
+    <p><strong>気に入った？</strong> →「<span style="color: var(--accent); font-weight: 700;">採用したい</span>」と返信ください。本番に反映します。<br/>
+    <strong>もう少し調整したい？</strong> → 例：「もう少し薄く」「ライト時の色を変えて」など指示ください。</p>
+  </div>
+
+  <script>
+    function setTheme(t) {
+      document.body.dataset.theme = t;
+      document.getElementById('t-dark').classList.toggle('active', t === 'dark');
+      document.getElementById('t-light').classList.toggle('active', t === 'light');
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = t === 'light' ? '#f5f7fb' : '#0a0e1a';
+    }
+  </script>
+</body>
+</html>
