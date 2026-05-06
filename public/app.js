@@ -19,6 +19,26 @@
   const sanitizeUrl = (u) => /^https?:\/\//i.test(String(u || '').trim()) ? u : '#';
   const normalizeCategory = (c) => VALID_CATEGORIES.includes(c) ? c : 'その他';
 
+  // **bold** / ==marker== / \n をHTML化（XSS対策のため必ずescape後に処理）
+  function richText(s) {
+    if (!s) return '';
+    let h = escapeHtml(s);
+    h = h.replace(/==([^=]+)==/g, '<mark class="hl">$1</mark>');
+    h = h.replace(/\*\*([^*]+)\*\*/g, '<strong class="kw">$1</strong>');
+    h = h.replace(/\r?\n/g, '<br/>');
+    return h;
+  }
+
+  // detail_points: "**見出し**：本文" を key/value で整形
+  function renderDetailPoint(p) {
+    if (!p) return '';
+    const m = String(p).match(/^\*\*([^*]+)\*\*\s*[:：]\s*(.+)$/);
+    if (m) {
+      return `<li class="dp-row"><span class="dp-key">${richText(m[1])}</span><span class="dp-val">${richText(m[2])}</span></li>`;
+    }
+    return `<li class="dp-row dp-row-plain">${richText(p)}</li>`;
+  }
+
   // ===== 状態 =====
   const Store = {
     digest: null,           // 今日のダイジェスト
@@ -69,31 +89,39 @@
   // ===== トピックカード描画 =====
   function renderTopic(t, idx, opts = {}) {
     const cat = normalizeCategory(t.category || '');
-    const titleJa = escapeHtml(t.title_ja || '');
-    const titleEn = t.title_en ? `<div class="topic-title-en">${escapeHtml(t.title_en)}</div>` : '';
+    const titleJaRich = richText(t.title_ja || '');
     const source = escapeHtml(t.source || '');
     const url = sanitizeUrl(t.url);
-    const simple = escapeHtml(t.simple_explanation || '').replace(/\n/g, '<br/>');
-    const detail = escapeHtml(t.detail_explanation || '').replace(/\n/g, '<br/>');
+    const simple = richText(t.simple_explanation || '');
+    const detailSummary = richText(t.detail_summary || '');
+    const detailPoints = Array.isArray(t.detail_points) ? t.detail_points : [];
+    // 後方互換：旧 detail_explanation のみ持つアーカイブ
+    const detailLegacy = !detailSummary && !detailPoints.length && t.detail_explanation
+      ? richText(t.detail_explanation) : '';
     const points = Array.isArray(t.points) ? t.points : [];
-    const before = escapeHtml(t.before || '');
-    const after = escapeHtml(t.after || '');
-    const impact = escapeHtml(t.impact || '');
+    const before = richText(t.before || '');
+    const after = richText(t.after || '');
+    const impact = richText(t.impact || '');
     const bookmarked = isBookmarked(t);
     const dataIdAttr = `data-topic-id="${escapeHtml(topicId(t))}"`;
 
-    const detailHtml = detail ? `
+    const hasDetail = detailSummary || detailPoints.length || detailLegacy;
+    const detailHtml = hasDetail ? `
       <details class="detail-accordion">
         <summary>もっと詳しく知りたい方へ
           <svg class="chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
-        <p class="detail-text">${detail}</p>
+        <div class="detail-body">
+          ${detailSummary ? `<p class="detail-summary">${detailSummary}</p>` : ''}
+          ${detailPoints.length ? `<ul class="detail-points">${detailPoints.map(renderDetailPoint).join('')}</ul>` : ''}
+          ${detailLegacy ? `<p class="detail-text">${detailLegacy}</p>` : ''}
+        </div>
       </details>` : '';
 
     const pointsHtml = points.length ? `
       <div class="points-block">
         <div class="block-label">ポイント</div>
-        <ol class="points-list">${points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ol>
+        <ol class="points-list">${points.map(p => `<li>${richText(p)}</li>`).join('')}</ol>
       </div>` : '';
 
     const baHtml = (before || after) ? `
@@ -108,7 +136,7 @@
 
     const impactHtml = impact ? `
       <div class="impact-block">
-        <div class="block-label">わたしたちへの影響</div>
+        <div class="block-label">💡 あなたへの影響</div>
         <p class="impact-text">${impact}</p>
       </div>` : '';
 
@@ -128,8 +156,7 @@
               </div>
               <button class="bookmark-btn ${bookmarked ? 'active' : ''}" data-bookmark aria-label="お気に入り" type="button">${starSvg}</button>
             </div>
-            <div class="topic-title-ja">${titleJa}</div>
-            ${titleEn}
+            <div class="topic-title-ja">${titleJaRich}</div>
             <div class="topic-summary-bottom">
               <span class="topic-source">${source}</span>
               <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -158,7 +185,7 @@
     const data = Store.digest;
     if (!data) return;
     $('overview-date').textContent = data.date || '';
-    $('overview-text').textContent = data.overview || '';
+    $('overview-text').innerHTML = richText(data.overview || '');
 
     const allTopics = Array.isArray(data.topics) ? data.topics : [];
     const cat = Store.settings.category;
@@ -178,7 +205,7 @@
     if (cat === 'all') {
       const tip = data.tip || {};
       $('tip-title').textContent = tip.title || '';
-      $('tip-content').textContent = tip.content || '';
+      $('tip-content').innerHTML = richText(tip.content || '');
     }
   }
 
@@ -231,7 +258,7 @@
     const html = `
       <section class="overview">
         <div class="section-label">${escapeHtml(data.date || date)}</div>
-        <p class="overview-text">${escapeHtml(data.overview || '')}</p>
+        <p class="overview-text">${richText(data.overview || '')}</p>
       </section>
       <div class="section-label">TOPICS</div>
       <ul class="topics-list">${topics.map((t, i) => renderTopic(t, i)).join('')}</ul>
@@ -243,7 +270,7 @@
           </div>
           <div class="tip-body">
             <h3 class="tip-title">${escapeHtml(tip.title)}</h3>
-            <p class="tip-content">${escapeHtml(tip.content || '')}</p>
+            <p class="tip-content">${richText(tip.content || '')}</p>
           </div>
         </div>` : ''}`;
     $('archive-detail-content').innerHTML = html;
