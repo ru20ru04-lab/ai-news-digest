@@ -25,10 +25,9 @@
   --header-bg: rgba(10, 14, 26, 0.92);
   --tip-accent: #ffd166;
   --bookmark-active: #ffd166;
-  /* マークアップ装飾 */
-  --kw-color: #ffe07a;
-  --marker-bg: rgba(255, 230, 100, 0.45);
-  --marker-text: #fff5b8;
+  /* マークアップ装飾（ダーク：solid 黄背景 + 濃い文字） */
+  --marker-bg: #ffd84d;
+  --marker-text: #1a1a1a;
   --c-newmodel: #4ade80;
   --c-research: #a78bfa;
   --c-business: #fb923c;
@@ -64,10 +63,9 @@
   --header-bg: rgba(245, 247, 251, 0.94);
   --tip-accent: #b8841a;
   --bookmark-active: #f59e0b;
-  /* マークアップ装飾 */
-  --kw-color: #b85b00;
-  --marker-bg: rgba(255, 230, 100, 0.7);
-  --marker-text: #1a1f2e;
+  /* マークアップ装飾（ライト：黄背景 + 濃い文字） */
+  --marker-bg: #fde047;
+  --marker-text: #1a1a1a;
   --c-newmodel: #16a34a;
   --c-research: #7c3aed;
   --c-business: #ea580c;
@@ -286,26 +284,29 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 }
 
 /* ===== マークアップ装飾（共通） ===== */
+/* キーワード（**...**）は単に太字。色は本文と同じ。情報の階層を作る。 */
 .kw {
   font-weight: 800;
-  color: var(--kw-color);
   letter-spacing: 0.01em;
 }
+/* タイトル内のキーワードはアクセント色で軽く強調 */
 .topic-title-ja .kw {
-  /* タイトル内は控えめにアクセント色＋下線で */
   color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--accent-soft);
 }
+/* マーカー（==...==）は黄色蛍光ペン。背景 solid + 濃い文字でコントラストを確保 */
 .hl {
-  background: linear-gradient(transparent 55%, var(--marker-bg) 55%);
-  padding: 0 2px;
+  background: var(--marker-bg);
+  color: var(--marker-text) !important;
   font-weight: 700;
-  color: var(--marker-text);
-  border-radius: 2px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  /* 行間を圧迫しないよう margin */
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
+/* マーカー内の太字は暗色を維持 */
+.hl .kw, .kw .hl { color: var(--marker-text) !important; }
 
 .simple-block {
   padding: 14px 16px 14px 18px;
@@ -346,64 +347,72 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 .detail-accordion[open] .chevron-sm { transform: rotate(180deg); }
 
 .detail-body {
-  padding: 14px 16px 16px;
+  padding: 16px 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 .detail-summary {
-  font-size: 0.91em;
+  font-size: 0.95em;
   font-weight: 600;
   line-height: 1.85;
   color: var(--text);
-  padding: 12px 14px;
+  padding: 14px 16px;
   background: var(--accent-soft);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 12px 12px 0;
 }
+
+/* 詳細ポイント：スマホ向けカードブロック型レイアウト */
 .detail-points {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   margin: 0;
 }
 .detail-points .dp-row {
-  display: grid;
-  grid-template-columns: minmax(0, 35%) 1fr;
-  gap: 10px;
-  font-size: 0.85em;
-  line-height: 1.75;
-  padding: 10px 0;
-  border-bottom: 1px dashed var(--border-soft);
-}
-.detail-points .dp-row:last-child { border-bottom: none; }
-.detail-points .dp-row-plain {
   display: block;
-  padding-left: 14px;
-  position: relative;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  font-size: 0.92em;
+  line-height: 1.75;
 }
-.detail-points .dp-row-plain::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-weight: 700;
+.detail-points .dp-row-plain {
+  border-left-color: var(--text-mute);
 }
 .dp-key {
+  display: block;
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1.02em;
+  margin-bottom: 6px;
   word-break: break-word;
 }
-.dp-val { color: var(--text); }
-.detail-text { font-size: 0.88em; line-height: 1.9; color: var(--text); }
+.dp-val {
+  display: block;
+  color: var(--text);
+  word-break: break-word;
+}
 
-@media (max-width: 480px) {
-  .detail-points .dp-row {
-    grid-template-columns: 1fr;
-    gap: 4px;
-  }
-  .dp-key { font-size: 0.92em; }
+/* 解説段落（detail_text）：詳細項目の後の深掘り */
+.detail-text-block {
+  margin-top: 6px;
+  padding: 14px 16px 16px;
+  background: var(--bg-soft);
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+}
+.detail-text-block .block-label {
+  margin-bottom: 8px;
+}
+.detail-text {
+  font-size: 0.93em;
+  line-height: 1.95;
+  color: var(--text);
 }
 
 .points-block { }
@@ -417,7 +426,8 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 .points-list {
   list-style: none;
   counter-reset: pt;
-  display: flex; flex-direction: column; gap: 12px;
+  display: flex; flex-direction: column; gap: 14px;
+  margin: 0;
 }
 .points-list li {
   counter-increment: pt;
@@ -438,29 +448,75 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
   display: flex; align-items: center; justify-content: center;
   margin-top: 1px;
 }
-
-.ba-block { }
-.ba-grid { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 8px; align-items: stretch; }
-.ba-col {
-  background: var(--bg-soft);
-  border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  padding: 12px;
+.points-list .pt-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
-.ba-col-after { border-color: var(--accent); background: var(--accent-soft); }
+
+/* BEFORE → AFTER：常に縦並びで「変化のストーリー」を強調 */
+.ba-block { }
+.ba-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ba-col {
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-soft);
+}
+.ba-col-before {
+  background: var(--bg-soft);
+  border-left: 4px solid var(--text-mute);
+  opacity: 0.92;
+}
+.ba-col-after {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+}
 .ba-head {
-  font-size: 0.63em;
+  font-size: 0.75em;
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   color: var(--text-dim);
   margin-bottom: 6px;
 }
 .ba-col-after .ba-head { color: var(--accent); }
-.ba-text { font-size: 0.81em; line-height: 1.65; color: var(--text); }
-.ba-arrow {
-  display: flex; align-items: center; justify-content: center;
+.ba-text {
+  font-size: 0.94em;
+  line-height: 1.7;
+  color: var(--text);
+}
+.ba-col-before .ba-text {
+  color: var(--text-dim);
+}
+/* 矢印行 */
+.ba-arrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+}
+.ba-arrow-line {
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed var(--accent);
+  opacity: 0.5;
+}
+.ba-arrow-label {
+  flex-shrink: 0;
+  font-size: 0.72em;
+  font-weight: 800;
   color: var(--accent);
-  font-size: 1.13em;
+  letter-spacing: 0.08em;
+  background: var(--accent-soft);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.ba-arrow-label::before {
+  content: "↓ ";
   font-weight: 700;
 }
 
@@ -665,10 +721,19 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 
 footer.app-footer { display: none; }
 
-/* モバイル */
+/* モバイル最適化 */
 @media (max-width: 480px) {
   main { padding: 8px 12px 12px; }
-  .ba-grid { grid-template-columns: 1fr; gap: 8px; }
-  .ba-arrow { transform: rotate(90deg); }
   .tab span { font-size: 10px; }
+  /* タイトル＋ブックマークのヘッダ周りを少し詰める */
+  .topic-card > summary { padding: 14px 14px; gap: 6px; }
+  .topic-body { padding: 0 14px 18px; gap: 22px; }
+  /* 詳細アコーディオンの内側パディングを少し詰める */
+  .detail-body { padding: 14px 12px 16px; gap: 14px; }
+  .detail-points .dp-row { padding: 12px 12px; }
+  .detail-text-block { padding: 12px 14px 14px; }
+  /* かんたん説明・ポイント・影響セクションの余白 */
+  .simple-block, .impact-block { padding: 12px 14px 12px 16px; }
+  .points-list li { font-size: 0.95em; }
+  .points-list li::before { width: 24px; height: 24px; }
 }

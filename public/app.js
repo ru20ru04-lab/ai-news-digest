@@ -95,8 +95,9 @@
     const simple = richText(t.simple_explanation || '');
     const detailSummary = richText(t.detail_summary || '');
     const detailPoints = Array.isArray(t.detail_points) ? t.detail_points : [];
+    const detailText = richText(t.detail_text || '');
     // 後方互換：旧 detail_explanation のみ持つアーカイブ
-    const detailLegacy = !detailSummary && !detailPoints.length && t.detail_explanation
+    const detailLegacy = !detailSummary && !detailPoints.length && !detailText && t.detail_explanation
       ? richText(t.detail_explanation) : '';
     const points = Array.isArray(t.points) ? t.points : [];
     const before = richText(t.before || '');
@@ -105,7 +106,7 @@
     const bookmarked = isBookmarked(t);
     const dataIdAttr = `data-topic-id="${escapeHtml(topicId(t))}"`;
 
-    const hasDetail = detailSummary || detailPoints.length || detailLegacy;
+    const hasDetail = detailSummary || detailPoints.length || detailText || detailLegacy;
     const detailHtml = hasDetail ? `
       <details class="detail-accordion">
         <summary>もっと詳しく知りたい方へ
@@ -114,6 +115,7 @@
         <div class="detail-body">
           ${detailSummary ? `<p class="detail-summary">${detailSummary}</p>` : ''}
           ${detailPoints.length ? `<ul class="detail-points">${detailPoints.map(renderDetailPoint).join('')}</ul>` : ''}
+          ${detailText ? `<div class="detail-text-block"><div class="block-label">解説</div><p class="detail-text">${detailText}</p></div>` : ''}
           ${detailLegacy ? `<p class="detail-text">${detailLegacy}</p>` : ''}
         </div>
       </details>` : '';
@@ -121,16 +123,26 @@
     const pointsHtml = points.length ? `
       <div class="points-block">
         <div class="block-label">ポイント</div>
-        <ol class="points-list">${points.map(p => `<li>${richText(p)}</li>`).join('')}</ol>
+        <ol class="points-list">${points.map(p => `<li><span class="pt-text">${richText(p)}</span></li>`).join('')}</ol>
       </div>` : '';
 
     const baHtml = (before || after) ? `
       <div class="ba-block">
         <div class="block-label">BEFORE → AFTER</div>
-        <div class="ba-grid">
-          <div class="ba-col"><div class="ba-head">BEFORE</div><div class="ba-text">${before}</div></div>
-          <div class="ba-arrow">→</div>
-          <div class="ba-col ba-col-after"><div class="ba-head">AFTER</div><div class="ba-text">${after}</div></div>
+        <div class="ba-stack">
+          <div class="ba-col ba-col-before">
+            <div class="ba-head">BEFORE　これまで</div>
+            <div class="ba-text">${before}</div>
+          </div>
+          <div class="ba-arrow-row">
+            <span class="ba-arrow-line"></span>
+            <span class="ba-arrow-label">こう変わる</span>
+            <span class="ba-arrow-line"></span>
+          </div>
+          <div class="ba-col ba-col-after">
+            <div class="ba-head">AFTER　これから</div>
+            <div class="ba-text">${after}</div>
+          </div>
         </div>
       </div>` : '';
 
