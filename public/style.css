@@ -25,9 +25,9 @@
   --header-bg: rgba(10, 14, 26, 0.92);
   --tip-accent: #ffd166;
   --bookmark-active: #ffd166;
-  /* マークアップ装飾（ダーク：solid 黄背景 + 濃い文字） */
-  --marker-bg: #ffd84d;
-  --marker-text: #1a1a1a;
+  /* マークアップ装飾（ダーク） */
+  --hl-color: #2dd4bf;          /* 下線強調 teal */
+  --warn-color: #f87171;        /* 注意・リスク 赤 */
   --c-newmodel: #4ade80;
   --c-research: #a78bfa;
   --c-business: #fb923c;
@@ -63,9 +63,9 @@
   --header-bg: rgba(245, 247, 251, 0.94);
   --tip-accent: #b8841a;
   --bookmark-active: #f59e0b;
-  /* マークアップ装飾（ライト：黄背景 + 濃い文字） */
-  --marker-bg: #fde047;
-  --marker-text: #1a1a1a;
+  /* マークアップ装飾（ライト） */
+  --hl-color: #0d9488;          /* 下線強調 teal */
+  --warn-color: #dc2626;        /* 注意・リスク 赤 */
   --c-newmodel: #16a34a;
   --c-research: #7c3aed;
   --c-business: #ea580c;
@@ -284,7 +284,7 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 }
 
 /* ===== マークアップ装飾（共通） ===== */
-/* キーワード（**...**）は単に太字。色は本文と同じ。情報の階層を作る。 */
+/* **太字**（.kw）：単に太字。色は本文と同じ */
 .kw {
   font-weight: 800;
   letter-spacing: 0.01em;
@@ -293,20 +293,20 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 .topic-title-ja .kw {
   color: var(--accent);
 }
-/* マーカー（==...==）は黄色蛍光ペン。背景 solid + 濃い文字でコントラストを確保 */
+/* ==下線強調==（.hl）：teal の太い下線。背景なし */
 .hl {
-  background: var(--marker-bg);
-  color: var(--marker-text) !important;
   font-weight: 700;
-  padding: 1px 4px;
-  border-radius: 3px;
-  /* 行間を圧迫しないよう margin */
-  display: inline;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  text-decoration: underline;
+  text-decoration-color: var(--hl-color);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
 }
-/* マーカー内の太字は暗色を維持 */
-.hl .kw, .kw .hl { color: var(--marker-text) !important; }
+/* !!注意・リスク!!（.warn）：赤太字 */
+.warn {
+  color: var(--warn-color);
+  font-weight: 800;
+}
 
 .simple-block {
   padding: 14px 16px 14px 18px;
