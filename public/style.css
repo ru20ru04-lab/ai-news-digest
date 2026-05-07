@@ -433,6 +433,12 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
 }
 .faq-accordion > summary::-webkit-details-marker { display: none; }
 .faq-accordion[open] > summary { border-bottom: 1px solid var(--border-soft); }
+.faq-accordion > summary .chevron-sm {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
 .faq-accordion[open] > summary .chevron-sm { transform: rotate(180deg); }
 
 .faq-list {
