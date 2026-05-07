@@ -1,11 +1,11 @@
 # 今日のAIニュース（ai-news-digest）
 
-毎朝 6 時 JST に最新の AI ニュースを自動収集・日本語訳・要約し、iPhone のホーム画面から PWA として閲覧できるアプリ。
+毎朝 6 時前後（JST）に最新の AI ニュースを自動収集・日本語訳・要約し、iPhone のホーム画面から PWA として閲覧できるアプリ。
 
 ## 仕組み
 
 ```
-GitHub Actions（毎日 06:00 JST）
+GitHub Actions（毎日 04:30 JST 開始 → 06:00 前後 JST 配信完了）
   ├─ RSS（Anthropic / OpenAI / Google AI Blog / Google DeepMind / Meta AI / Hugging Face / The Decoder / MIT Tech Review / ITmedia AI+）
   ├─ Hacker News（AI 関連クエリ × 6）
   └─ arXiv（cs.AI / cs.LG / cs.CL）
@@ -20,7 +20,7 @@ GitHub Actions（毎日 06:00 JST）
 
 ```
 ai-news-digest/
-├── .github/workflows/daily-digest.yml  # 毎日 06:00 JST の cron
+├── .github/workflows/daily-digest.yml  # 毎日 04:30 JST の cron（遅延吸収して 6 時前後配信）
 ├── scripts/
 │   ├── fetch_news.py                   # 収集→Claude→JSON 出力
 │   ├── generate_icons.py               # アイコン生成（一度だけ実行）

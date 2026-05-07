@@ -2,8 +2,10 @@ name: Daily AI News Digest
 
 on:
   schedule:
-    # 毎朝 6:00 JST = 21:00 UTC（前日）
-    - cron: '0 21 * * *'
+    # 19:30 UTC（前日）= 04:30 JST に開始
+    # GitHub Actions の cron は混雑帯（毎時00分など）に数十分〜数時間遅延することがあるため、
+    # 余裕を持って 04:30 JST に予約 → 遅延しても朝 6 時前後に配信完了する設計
+    - cron: '30 19 * * *'
   workflow_dispatch:  # 手動：ニュース再生成 + デプロイ
   push:               # public/** の変更で：デプロイのみ（APIコールなし）
     branches: [main]
