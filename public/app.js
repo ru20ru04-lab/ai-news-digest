@@ -108,6 +108,7 @@
     const before = richText(t.before || '');
     const after = richText(t.after || '');
     const impact = richText(t.impact || '');
+    const faq = Array.isArray(t.faq) ? t.faq.filter(x => x && x.q && x.a) : [];
     const bookmarked = isBookmarked(t);
     const dataIdAttr = `data-topic-id="${escapeHtml(topicId(t))}"`;
 
@@ -157,6 +158,31 @@
         <p class="impact-text">${impact}</p>
       </div>` : '';
 
+    const faqHtml = faq.length ? `
+      <details class="faq-accordion">
+        <summary>
+          💬 ここがわからない人向け Q&A（${faq.length}個）
+          <svg class="chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <ul class="faq-list">
+          ${faq.map((qa) => `
+            <li>
+              <details class="faq-item">
+                <summary>
+                  <span class="faq-q-label">Q.</span>
+                  <span class="faq-q-text">${escapeHtml(qa.q)}</span>
+                  <svg class="chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="faq-a">
+                  <span class="faq-a-label">A.</span>
+                  <span class="faq-a-text">${richText(qa.a)}</span>
+                </div>
+              </details>
+            </li>
+          `).join('')}
+        </ul>
+      </details>` : '';
+
     const dateBadge = opts.dateLabel ? `<span class="topic-source">${escapeHtml(opts.dateLabel)}</span>` : '';
     const openAttr = (opts.open || idx === 0) && Store.settings.firstOpen === 'on' ? 'open' : '';
 
@@ -188,6 +214,7 @@
             ${pointsHtml}
             ${baHtml}
             ${impactHtml}
+            ${faqHtml}
             <a class="read-more" href="${url}" target="_blank" rel="noopener noreferrer">
               元の記事を読む
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
