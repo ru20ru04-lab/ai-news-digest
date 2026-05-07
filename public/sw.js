@@ -1,10 +1,10 @@
 // Service Worker：シェル（HTML/CSS/JS）はキャッシュ、データ（digest.json）は常にネット優先
-const CACHE = 'ai-news-shell-v10';
+const CACHE = 'ai-news-shell-v11';
 const SHELL = [
   './',
   './index.html',
-  './style.css?v=10',
-  './app.js?v=10',
+  './style.css?v=11',
+  './app.js?v=11',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
