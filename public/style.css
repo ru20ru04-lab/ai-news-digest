@@ -412,20 +412,19 @@ main { max-width: 720px; margin: 0 auto; padding: 8px 16px 16px; }
   word-break: break-word;
 }
 
-/* ===== FAQ アコーディオン（カード末尾・Q&A 色） ===== */
+/* ===== FAQ アコーディオン（カード末尾・もっと詳しく と完全同寸） ===== */
 .faq-accordion {
   border: 1px solid var(--border-soft);
-  border-left: 4px solid var(--faq-color);
   border-radius: 12px;
   background: var(--faq-bg);
   overflow: hidden;
 }
 .faq-accordion > summary {
-  /* もっと詳しく知りたい方へ と同等サイズ＋気持ち大きめ */
+  /* .detail-accordion > summary と完全に同じパラメータ */
   padding: 12px 16px;
   cursor: pointer;
   list-style: none;
-  font-size: 0.86em;
+  font-size: 0.84em;
   font-weight: 700;
   color: var(--faq-color);
   display: flex;
