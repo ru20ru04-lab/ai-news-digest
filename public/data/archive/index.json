@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-09",
+      "date_label": "2026年5月8日（水）",
+      "overview": "AI業界では**資金調達の加速**と**安全性への課題露呈**が同時進行。**Anthropic**が約900億ドルの評価額を目指す一方、**Apple**は**AI機能開発の遅延**で390億円の和解金支払いに合意。セキュリティ面では**",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-08",
       "date_label": "2026年5月8日（木）",
       "overview": "本日の AI ニュースは、**Anthropic** が **SpaceX のColossus-1** データセンター（22万GPU）を確保する大型インフラ投資、**OpenAI** の新音声モデル（**GPT-Realtime-2** な",
@@ -19,5 +25,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-08 07:47 JST"
+  "updated_at": "2026-05-09 07:39 JST"
 }
