@@ -27,6 +27,7 @@ import requests
 from anthropic import Anthropic
 
 JST = timezone(timedelta(hours=9))
+WEEKDAY_JA = ["月", "火", "水", "木", "金", "土", "日"]
 
 # 日本語ソース用 AI キーワードフィルタ（タイトルに含まれる場合のみ採用）
 JA_AI_KEYWORDS = [
@@ -315,7 +316,7 @@ PROMPT_TEMPLATE = """あなたは「AI ニュースをやさしく解説する�
 厳密な JSON のみを出力（コードフェンス不要）。
 
 {{
-  "date": "本日の日付（例: 2026年5月6日（火））",
+  "date": "（生成不要・Python側で上書き）",
   "overview": "本日全体の総括（**太字**含む 120〜200字）",
   "topics": [
     {{
@@ -406,6 +407,8 @@ def main() -> int:
     now_jst = now_utc.astimezone(JST)
     digest["generated_at_utc"] = now_utc.isoformat()
     digest["generated_at_jst"] = now_jst.strftime("%Y-%m-%d %H:%M JST")
+    # 曜日は AI に計算させると一貫してズレるので Python 側で必ず上書き
+    digest["date"] = f"{now_jst.year}年{now_jst.month}月{now_jst.day}日（{WEEKDAY_JA[now_jst.weekday()]}）"
     digest["source_count"] = len(items)
     digest.setdefault("topics", digest.pop("items", []))  # 旧 "items" キーがあった場合の互換
 
