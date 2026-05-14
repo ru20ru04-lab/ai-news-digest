@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-15",
+      "date_label": "2026年5月15日（金）",
+      "overview": "本日は **Claude** シリーズの拡充と **医療AI の支払い制度** 改革が主役。**Anthropic** が中小企業向けの **Claude for Small Business** を発表、非エンジニアの業務効率化を加速。一",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-14",
       "date_label": "2026年5月14日（木）",
       "overview": "本日は **AIエージェント** と **マルチエージェントコマース** が主流トピック。**Anthropic** が B2B 採用で **OpenAI を初めて上回り**、**Claude for Small Business** など",
@@ -55,5 +61,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-14 08:38 JST"
+  "updated_at": "2026-05-15 07:46 JST"
 }
