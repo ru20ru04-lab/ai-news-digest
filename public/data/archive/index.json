@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-17",
+      "date_label": "2026年5月17日（日）",
+      "overview": "本日のAI業界は金融統合と規制戦略の二極化が加速。**OpenAI** が **ChatGPT** に銀行口座連携機能を追加し、**Anthropic** は **900億ドル超の評価額** で **OpenAI** を上回りました。一方、",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-16",
       "date_label": "2026年5月16日（土）",
       "overview": "本日は**AI大型資金調達**と**金融分野への進出**が目玉。**Anthropic**が**$900億**の評価額で**OpenAI**を上回り、**OpenAI**は**ChatGPT**を個人金融アシスタント化。日本では**Runw",
@@ -67,5 +73,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-16 07:40 JST"
+  "updated_at": "2026-05-17 07:10 JST"
 }
