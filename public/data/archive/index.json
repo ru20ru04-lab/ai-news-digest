@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-20",
+      "date_label": "2026年5月20日（水）",
+      "overview": "本日のAI業界は、**Google I/O 2026** での大型発表と人事異動が主導権を握った。**Gemini Omni** など動画生成モデルの登場、**Anthropic** への **Andrej Karpathy** 入社、**",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-19",
       "date_label": "2026年5月19日（火）",
       "overview": "本日のAIニュースは、**OpenAI** と **Anthropic** による企業向け市場での激化、**生成AI** の業務導入による実績報告、そして法廷での重大判決が集中。**イーロン・マスク** の **OpenAI** 訴訟が全員",
@@ -85,5 +91,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-19 07:44 JST"
+  "updated_at": "2026-05-20 08:44 JST"
 }
