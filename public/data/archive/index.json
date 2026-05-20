@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-21",
+      "date_label": "2026年5月21日（木）",
+      "overview": "本日は **OpenAIのIPO申請** が業界最大の話題。**Anthropic** の躍進（Andrej Karpathy 入社、Claude Mythos発表）が **IBMショック** を引き起こし、AI業界の勢力図が激変。一方、*",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-20",
       "date_label": "2026年5月20日（水）",
       "overview": "本日のAI業界は、**Google I/O 2026** での大型発表と人事異動が主導権を握った。**Gemini Omni** など動画生成モデルの登場、**Anthropic** への **Andrej Karpathy** 入社、**",
@@ -91,5 +97,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-20 08:44 JST"
+  "updated_at": "2026-05-21 08:54 JST"
 }
