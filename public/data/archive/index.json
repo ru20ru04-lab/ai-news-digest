@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-22",
+      "date_label": "2026年5月22日（金）",
+      "overview": "AI企業の急速な事業拡大と上場機運が高まる一方、**生成AIによる著作権侵害疑惑や品質問題**が業界を揺さぶっています。**OpenAI と Anthropic** が相次いでIPO準備を進め、**数千億円規模の資金調達**が相次ぐなか、編",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-21",
       "date_label": "2026年5月21日（木）",
       "overview": "本日は **OpenAIのIPO申請** が業界最大の話題。**Anthropic** の躍進（Andrej Karpathy 入社、Claude Mythos発表）が **IBMショック** を引き起こし、AI業界の勢力図が激変。一方、*",
@@ -97,5 +103,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-21 08:54 JST"
+  "updated_at": "2026-05-22 08:18 JST"
 }
