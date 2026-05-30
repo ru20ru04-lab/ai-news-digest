@@ -1,6 +1,12 @@
 {
   "entries": [
     {
+      "date": "2026-05-31",
+      "date_label": "2026年5月31日（日）",
+      "overview": "**Anthropic が OpenAI を上回る企業価値** となり、AI 業界の主役交代が加速。一方、**Claude の無制限トークン利用で 5 億ドルの損失** 企業が出るなど、コスト管理の課題が浮上。**GPT-5.5 Insta",
+      "topics_count": 6
+    },
+    {
       "date": "2026-05-30",
       "date_label": "2026年5月30日（土）",
       "overview": "本日のAI業界は **Anthropic** と **OpenAI** の技術競争が加熱。**Claude Opus 4.8** が複数ベンチマークで **GPT-5.5** を上回る性能を達成した一方、OpenAI は **GPT-Ros",
@@ -151,5 +157,5 @@
       "topics_count": 6
     }
   ],
-  "updated_at": "2026-05-30 08:54 JST"
+  "updated_at": "2026-05-31 07:41 JST"
 }
